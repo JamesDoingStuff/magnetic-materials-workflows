@@ -23,6 +23,16 @@ spec:
         configMapKeyRef:
           name: sessionspaces
           key: data_directory
+    - name: scan_numbers
+      value: "12345 | 12345,12346,... | 12345-12355"
+    - name: dat_file
+      value: "/spool"
+    - name: all_scans
+      value: false
+    - name: write_tiff
+      value: false
+    - name: overwrite
+      value: false
   volumes:
   - name: session
     hostPath:
@@ -36,7 +46,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
-        storageClassName: netapp
+      storageClassName: netapp
   templates:
   - name: convert-to-dat
     inputs:
@@ -77,3 +87,15 @@ spec:
       tasks:
       - name: convert-to-dat
         template: convert-to-dat
+        arguments:
+          parameters:
+          - name: scan_numbers
+            value: "{{ workflow.parameters.scan_numbers }}"
+          - name: dat_file
+            value: "{{ workflow.parameters.dat_file }}"
+          - name: all_scans
+            value: "{{ workflow.parameters.all_scans }}"
+          - name: write_tiff
+            value: "{{ workflow.parameters.write_tiff }}"
+          - name: overwrite
+            value: "{{ workflow.parameters.overwrite }}"

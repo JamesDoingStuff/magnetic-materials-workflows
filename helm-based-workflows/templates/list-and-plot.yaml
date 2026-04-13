@@ -23,6 +23,26 @@ spec:
         configMapKeyRef:
           name: sessionspaces
           key: data_directory
+    - name: scan_numbers
+      value: "12345 | 12345,12346,... | 12345-12355"
+    - name: all_scans
+      value: true
+    - name: print_start_time
+      value: true
+    - name: print_cmd
+      value: true
+    - name: print_temp
+      value: false
+    - name: print_energy
+      value: false
+    - name: print_sx
+      value: false
+    - name: print_sy
+      value: false
+    - name: print_sz
+      value: false
+    - name: other_vars
+      value: ""
   volumes:
   - name: session
     hostPath:
@@ -36,7 +56,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
-        storageClassName: netapp
+      storageClassName: netapp
   templates:
   - name: list-and-plot
     inputs:
@@ -91,4 +111,25 @@ spec:
       tasks:
       - name: list-and-plot
         template: list-and-plot
-        
+        arguments:
+          parameters:
+          - name: scan_numbers
+            value: "{{workflow.parameters.scan_numbers}}"
+          - name: all_scans
+            value: "{{workflow.parameters.all_scans}}"
+          - name: print_start_time
+            value: "{{workflow.parameters.print_start_time}}"
+          - name: print_cmd
+            value: "{{workflow.parameters.print_cmd}}"
+          - name: print_temp
+            value: "{{workflow.parameters.print_tmp}}"
+          - name: print_energy
+            value: "{{workflow.parameters.print_energy}}"
+          - name: print_sx
+            value: "{{workflow.parameters.print_sx}}"
+          - name: print_sy
+            value: "{{workflow.parameters.print_sy}}"
+          - name: print_sz
+            value: "{{workflow.parameters.print_sz}}"
+          - name: other_vars
+            value: "{{workflow.parameters.other_vars}}"
